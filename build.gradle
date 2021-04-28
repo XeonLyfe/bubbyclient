@@ -60,7 +60,6 @@ minecraft {
 
     mappings channel: 'stable', version: '39-1.12'
 
-
 }
 
 repositories {
