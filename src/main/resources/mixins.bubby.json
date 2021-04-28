@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "bubby.api.mixin.mixins",
+  "refmap": "mixins.bubby.refmap.json",
+  "mixins": [
+    "AbstractClientPlayerMixin",
+    "CPacketPlayerMixin",
+    "EntityMixin",
+    "EntityPlayerMixin",
+    "EntityPlayerSPMixin",
+    "EntityRendererMixin",
+    "GuiBossOverlayMixin",
+    "ItemRendererMixin",
+    "KeyBindingMixin",
+    "LayerBipedArmorMixin",
+    "MinecraftMixin",
+    "GuiMainMenuMixin",
+    "MovementInputFromOptionsMixin",
+    "NetworkManagerMixin",
+    "TextComponentStringMixin",
+    "TimerMixin"
+  ]
+}

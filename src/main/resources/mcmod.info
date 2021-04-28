@@ -1,0 +1,16 @@
+[
+{
+  "modid": "bubbyclient",
+  "name": "bubbyclient",
+  "description": "Best Client forge pog",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://urmom.gay",
+  "updateUrl": "",
+  "authorList": ["BubbyRoosh", "Jrepxc", "Rina"],
+  "credits": "ur mom",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,147 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = 'SpongePowered'
+            url = 'http://repo.spongepowered.org/maven'
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+        classpath 'org.spongepowered:mixingradle:0.5-SNAPSHOT'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.0'
+        classpath group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin', version: "${kotlin_version}"
+        classpath 'gradle.plugin.com.peterabeles.gversion:gversion-plugin:1.4.0'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'kotlin'
+apply plugin: 'com.peterabeles.gversion'
+
+
+
+
+version = "1.0"
+group = 'bubbyclient' 
+archivesBaseName = 'bubbyclient'
+
+sourceCompatibility = targetCompatibility = '1.8'
+
+gversion {
+  srcDir = "src/main/kotlin/"
+  classPackage = "bubby.client"
+  className = "Version"
+  //dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+  dateFormat = "MM/dd/yyyy"
+  timeZone = "UTC"
+  language = "kotlin"
+}
+
+compileKotlin {
+  kotlinOptions {
+    jvmTarget = '1.8'
+    freeCompilerArgs += '-Xopt-in=kotlin.RequiresOptIn'
+  }
+}
+
+minecraft {
+    version = "1.12.2-14.23.0.2531"
+    runDir = "run"
+    mappings = "snapshot_20180814"
+    //coreMod = "bubby.loader.Core"
+    makeObfSourceJar = false
+}
+
+repositories {
+    maven {
+        name = 'spongepowered-repo'
+        url = 'http://repo.spongepowered.org/maven/'
+    }
+    maven {
+        name = 'jitpack'
+        url = 'https://jitpack.io'
+    }
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile("org.spongepowered:mixin:0.7.5-SNAPSHOT") {
+        exclude module: 'asm-commons'
+        exclude module: 'asm-tree'
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'log5j-core'
+    }
+
+    compile 'com.github.ImpactDevelopment:SimpleTweaker:1.2'
+    compile 'club.minnced:java-discord-rpc:2.0.2'
+
+    //compile 'com.alibaba:fastjson:1.2.73'
+
+    compile group: "org.jetbrains.kotlin", name: "kotlin-stdlib", version: kotlin_version
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+        expand "version": project.version, "mcversion": project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
+}
+
+mixin {
+    defaultObfuscationEnv searge
+    add sourceSets.main, 'mixins.bubby.refmap.json'
+}
+
+reobf {
+    shadowJar {
+        classpath = sourceSets.main.compileClasspath
+    }
+}
+
+shadowJar {
+    dependencies {
+        include(dependency('org.spongepowered:mixin'))
+        include(dependency('org.jetbrains.kotlin:kotlin-stdlib'))
+        include(dependency('com.github.ImpactDevelopment:SimpleTweaker:1.2'))
+        include(dependency('club.minnced:java-discord-rpc'))
+        include(dependency('com.alibaba:fastjaon:1.2.73'))
+    }
+
+    //this shrinks the jar, but it seems to exclude some things that were supposed to still be there.. leaving just incase there's a reason/fix found
+    //minimize()
+    exclude 'dummyThing'
+    exclude 'LICENSE'
+    classifier = 'full'
+}
+
+compileKotlin.dependsOn(createVersionFile)
+//build.dependsOn(clientJar,loaderJar)
+
+jar {
+    exclude 'log4j2.xml'
+    manifest.attributes(
+            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+            "TweakOrder": 0,
+            "MixinConfigs": 'mixins.bubby.json'
+    )
+}
