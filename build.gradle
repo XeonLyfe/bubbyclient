@@ -3,27 +3,28 @@ buildscript {
         jcenter()
         mavenCentral()
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            name = 'forge'
+            url = 'https://maven.minecraftforge.net/'
         }
+
         maven {
             name = 'SpongePowered'
-            url = 'http://repo.spongepowered.org/maven'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
         }
         maven {
             url "https://plugins.gradle.org/m2/"
         }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-        classpath 'org.spongepowered:mixingradle:0.5-SNAPSHOT'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.0'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
         classpath group: 'org.jetbrains.kotlin', name: 'kotlin-gradle-plugin', version: "${kotlin_version}"
         classpath 'gradle.plugin.com.peterabeles.gversion:gversion-plugin:1.4.0'
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'kotlin'
@@ -56,17 +57,16 @@ compileKotlin {
 }
 
 minecraft {
-    version = "1.12.2-14.23.0.2531"
-    runDir = "run"
-    mappings = "snapshot_20180814"
-    //coreMod = "bubby.loader.Core"
-    makeObfSourceJar = false
+
+    mappings channel: 'stable', version: '39-1.12'
+
+
 }
 
 repositories {
     maven {
         name = 'spongepowered-repo'
-        url = 'http://repo.spongepowered.org/maven/'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
     }
     maven {
         name = 'jitpack'
@@ -77,14 +77,18 @@ repositories {
 }
 
 dependencies {
-    compile("org.spongepowered:mixin:0.7.5-SNAPSHOT") {
-        exclude module: 'asm-commons'
-        exclude module: 'asm-tree'
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
+
+    compile('org.spongepowered:mixin:0.7.4-SNAPSHOT') {
         exclude module: 'launchwrapper'
         exclude module: 'guava'
-        exclude module: 'log5j-core'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
     }
 
+    annotationProcessor('org.spongepowered:mixin:0.8.2:processor') {
+        exclude module: 'gson'
+    }
     compile 'com.github.ImpactDevelopment:SimpleTweaker:1.2'
     compile 'club.minnced:java-discord-rpc:2.0.2'
 
@@ -95,20 +99,21 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
 
     from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
-        expand "version": project.version, "mcversion": project.minecraft.version
+        include 'mcmod.info'
+        include "mixins.bubby.refmap.json"
+
+        expand 'version':project.version
     }
 
     from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
+        exclude 'mcmod.info'
     }
 }
 
 mixin {
-    defaultObfuscationEnv searge
+    defaultObfuscationEnv 'searge'
     add sourceSets.main, 'mixins.bubby.refmap.json'
 }
 
