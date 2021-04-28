@@ -6,7 +6,7 @@
 ```1. git clone https://git.jrepxc.wtf/jakepriddle/bubbyclient.git``` \
 ```2. cd bubbyclient``` \
 ```3. ./gradlew build (may have to chmod +x ./gradlew)``` \
-```4. Drag bubbyclient-1.0-full.jar to your mods folder``` \
+```4. Drag bubbyclient-1.0-full.jar to your mods folder``` 
 
 ### Notable Things
 
