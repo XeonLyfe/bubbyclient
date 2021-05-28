@@ -3,7 +3,7 @@
 ## A client made by Bubbyroosh and Jake, made for 1.12.2
 
 ### How to Install?
-```1. git clone https://git.jrepxc.wtf/jakepriddle/bubbyclient.git``` \
+```1. git clone https://github.com/jakepriddle/bubbyclient.git``` \
 ```2. cd bubbyclient``` \
 ```3. ./gradlew build (may have to chmod +x ./gradlew)``` \
 ```4. Drag bubbyclient-1.0-full.jar to your mods folder``` 
